@@ -78,27 +78,14 @@ function cptui_make_activation_redirect() {
 		return;
 	}
 
-	$query_args = array( 'page' => 'cptui_main_menu' );
-
-	$new_install = get_option( 'cptui_new_install', '' );
-	if ( '' === $new_install ) {
-		$query_args['is_new'] = 'true';
-
-		$debug = defined( 'WP_DEBUG' ) && WP_DEBUG ? 'debug' : '';
-		// Lets make ourselves see it for development sake.
-		if ( empty( $debug ) ) {
-			update_option( 'cptui_new_install', 'false' );
-		}
-	}
-
-	if ( 'false' === $new_install ) {
+	if ( ! cptui_is_new_install() ) {
 		return;
 	}
 
 	// Redirect to CPTUI about page.
 	wp_safe_redirect(
 		add_query_arg(
-			$query_args,
+			array( 'page' => 'cptui_main_menu' ),
 			cptui_admin_url( 'admin.php?page=cptui_main_menu' )
 		)
 	);
