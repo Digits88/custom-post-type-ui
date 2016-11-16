@@ -651,12 +651,12 @@ function cptui_not_new_install( $wp_upgrader, $extras ) {
 	}
 
 	// If we are already known as not new, return.
-	if ( 'false' === get_option( 'cptui_new_install', '' ) ) {
+	if ( cptui_is_new_install() ) {
 		return;
 	}
 
 	// We need to mark ourselves as not new.
-	update_option( 'cptui_new_install', 'false' );
+	cptui_set_not_new_install();
 }
 add_action( 'upgrader_process_complete', 'cptui_not_new_install', 10, 2 );
 
