@@ -134,7 +134,7 @@ add_action( 'cptui_main_page_extra_notes', 'cptui_pluginize_content', 9 );
  * @since 1.4.0
  */
 function cptui_about_page_newsletter() {
-	if ( ! empty( $_GET ) && isset( $_GET['is_new'] ) && 'true' == $_GET['is_new'] ) {
+	if ( cptui_is_new_install() ) {
 		return '';
 	}
 	?>
