@@ -661,6 +661,33 @@ function cptui_not_new_install( $wp_upgrader, $extras ) {
 add_action( 'upgrader_process_complete', 'cptui_not_new_install', 10, 2 );
 
 /**
+ * Check whether or not we're on a new install.
+ *
+ * @since 1.5.0
+ *
+ * @return bool
+ */
+function cptui_is_new_install() {
+	$new_or_not = true;
+	$saved = get_option( 'cptui_new_install', '' );
+
+	if ( 'false' === $saved ) {
+		$new_or_not = false;
+	}
+
+	/**
+	 * Filters the new install status.
+	 *
+	 * Offers third parties the ability to override if they choose to.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @param bool $new_or_not Whether or not site is a new install.
+	 */
+	return (bool) apply_filters( 'cptui_is_new_install',  $new_or_not );
+}
+
+/**
  * Returns saved values for single post type from CPTUI settings.
  *
  * @since 1.5.0
