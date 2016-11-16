@@ -688,6 +688,15 @@ function cptui_is_new_install() {
 }
 
 /**
+ * Set our activation status to not new.
+ *
+ * @since 1.5.0
+ */
+function cptui_set_not_new_install() {
+	update_option( 'cptui_new_install', 'false' );
+}
+
+/**
  * Returns saved values for single post type from CPTUI settings.
  *
  * @since 1.5.0
