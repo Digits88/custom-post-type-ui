@@ -59,12 +59,15 @@ function cptui_listings() {
 			do_action( 'cptui_before_post_type_listing' );
 			?>
 			<table class="wp-list-table widefat post-type-listing">
+				<thead>
 				<tr>
 					<?php
 					foreach ( $post_type_table_heads as $head ) {
 						echo '<th>' . esc_html( $head ) . '</th>';
 					} ?>
 				</tr>
+				</thead>
+				<tbody>
 				<?php
 				$counter = 1;
 				foreach ( $post_types as $post_type => $post_type_settings ) {
@@ -99,6 +102,7 @@ function cptui_listings() {
 						$archive = get_post_type_archive_link( $post_type );
 					}
 					?>
+
 						<tr class="<?php echo esc_attr( $rowclass ); ?>">
 							<?php
 							$edit_path          = 'admin.php?page=cptui_manage_post_types&action=edit&cptui_post_type=' . $post_type;
@@ -106,7 +110,8 @@ function cptui_listings() {
 							<td>
 								<?php
 								printf(
-									'<a href="%s">%s</a> | <a href="%s">%s</a><br/>',
+									'<a href="%s">%s</a><br/>
+									<a href="%s">%s</a><br/>',
 									esc_attr( $post_type_link_url ),
 									sprintf(
 										esc_html__( 'Edit %s', 'custom-post-type-ui' ),
@@ -128,7 +133,7 @@ function cptui_listings() {
 									if ( in_array( $value, array( '1', '0' ) ) ) {
 										echo esc_html( disp_boolean( $value ) );
 									} else {
-										echo esc_html( $value );
+										echo ( ! empty( $value ) ) ? esc_html( $value ) : '""';
 									}
 									echo '<br/>';
 								} ?>
@@ -141,9 +146,17 @@ function cptui_listings() {
 							</td>
 							<td>
 								<?php
-								foreach ( $taxonomies['taxonomies'] as $taxonomy ) {
-									echo esc_html( $taxonomy ) . '<br/>';
-								} ?>
+								if ( ! empty( $taxonomies['taxonomies'] ) ) {
+									foreach ( $taxonomies['taxonomies'] as $taxonomy ) {
+										echo esc_html( $taxonomy ) . '<br/>';
+									}
+								} else {
+									printf(
+										'<span aria-hidden="true">—</span><span class="screen-reader-text">%s</span>',
+										esc_html__( 'No associated taxonomies', 'custom-post-type-ui' )
+									);
+								}
+								?>
 							</td>
 							<td>
 								<?php
@@ -160,7 +173,10 @@ function cptui_listings() {
 										);
 									}
 								} else {
-									esc_html_e( 'No custom labels to display', 'custom-post-type-ui' );
+									printf(
+										'<span aria-hidden="true">—</span><span class="screen-reader-text">%s</span>',
+										esc_html__( 'No custom labels to display', 'custom-post-type-ui' )
+									);
 								}
 								?>
 							</td>
@@ -196,12 +212,15 @@ function cptui_listings() {
 					$counter++;
 				}
 				?>
+				</tbody>
+				<tfoot>
 				<tr>
 					<?php
 					foreach ( $post_type_table_heads as $head ) {
 						echo '<th>' . esc_html( $head ) . '</th>';
 					} ?>
 				</tr>
+				</tfoot>
 			</table>
 			<?php
 				/**
@@ -244,12 +263,15 @@ function cptui_listings() {
 				do_action( 'cptui_before_taxonomy_listing' );
 				?>
 				<table class="wp-list-table widefat taxonomy-listing">
+					<thead>
 					<tr>
 						<?php
 						foreach ( $taxonomy_table_heads as $head ) {
 							echo '<th>' . esc_html( $head ) . '</th>';
 						} ?>
 					</tr>
+					</thead>
+					<tbody>
 					<?php
 					$counter = 1;
 					foreach ( $taxonomies as $taxonomy => $taxonomy_settings ) {
@@ -284,7 +306,8 @@ function cptui_listings() {
 								$taxonomy_link_url  = ( is_network_admin() ) ? network_admin_url( $edit_path ) : admin_url( $edit_path ); ?>
 								<td>
 									<?php printf(
-										'<a href="%s">%s</a> | <a href="%s">%s</a>',
+										'<a href="%s">%s</a><br/>
+										<a href="%s">%s</a>',
 										esc_attr( $taxonomy_link_url ),
 										sprintf(
 											esc_html__( 'Edit %s', 'custom-post-type-ui' ),
@@ -301,7 +324,7 @@ function cptui_listings() {
 										if ( in_array( $value, array( '1', '0' ) ) ) {
 											echo esc_html( disp_boolean( $value ) );
 										} else {
-											echo esc_html( $value );
+											echo ( ! empty( $value ) ) ? esc_html( $value ) : '""';
 										}
 										echo '<br/>';
 									} ?>
@@ -326,12 +349,15 @@ function cptui_listings() {
 											);
 										}
 									} else {
-										esc_html_e( 'No custom labels to display', 'custom-post-type-ui' );
+										printf(
+											'<span aria-hidden="true">—</span><span class="screen-reader-text">%s</span>',
+											esc_html__( 'No custom labels to display', 'custom-post-type-ui' )
+										);
 									}
 									?>
 								</td>
 								<td>
-									<p><strong><?php esc_html_e( 'Archives', 'custom-post-type-ui' ); ?></strong><br />
+									<p><strong><?php esc_html_e( 'Archives file name examples.', 'custom-post-type-ui' ); ?></strong><br />
 										taxonomy-<?php echo esc_html( $taxonomy ); ?>-term_slug.php *<br />
 										taxonomy-<?php echo esc_html( $taxonomy ); ?>.php<br />
 										taxonomy.php<br />
@@ -354,12 +380,15 @@ function cptui_listings() {
 						$counter++;
 					}
 					?>
+					</tbody>
+					<tfoot>
 					<tr>
 						<?php
 						foreach ( $taxonomy_table_heads as $head ) {
 							echo '<th>' . esc_html( $head ) . '</th>';
 						} ?>
 					</tr>
+					</tfoot>
 				</table>
 			<?php
 				/**

@@ -49,8 +49,8 @@ add_action( 'admin_enqueue_scripts', 'cptui_post_type_enqueue_scripts' );
  *
  * @internal
  *
- * @param array  $tabs         Array of tabs to display.
- * @param string $current_page Current page being shown.
+ * @param array  $tabs         Array of tabs to display. Optional.
+ * @param string $current_page Current page being shown. Optional. Default empty string.
  * @return array Amended array of tabs to show.
  */
 function cptui_post_type_tabs( $tabs = array(), $current_page = '' ) {
@@ -59,7 +59,7 @@ function cptui_post_type_tabs( $tabs = array(), $current_page = '' ) {
 		$post_types = cptui_get_post_type_data();
 		$classes    = array( 'nav-tab' );
 
-		$tabs['page_title'] = __( 'Manage Post Types', 'custom-post-type-ui' );
+		$tabs['page_title'] = get_admin_page_title();
 		$tabs['tabs'] = array();
 		// Start out with our basic "Add new" tab.
 		$tabs['tabs']['add'] = array(
@@ -860,7 +860,7 @@ function cptui_manage_post_types() {
 
 							echo $ui->get_tr_start() . $ui->get_th_start() . esc_html__( 'Supports', 'custom-post-type-ui' );
 
-							echo $ui->get_p( esc_html__( 'Add support for various available post editor features on the right.', 'custom_post_type_ui' ) );
+							echo $ui->get_p( esc_html__( 'Add support for various available post editor features on the right. A checked value means the post type means the feature is supported.', 'custom_post_type_ui' ) );
 
 							echo $ui->get_p( esc_html__( 'Use the "None" option to explicitly set "supports" to false.', 'custom-post-type-ui' ) );
 
@@ -1126,7 +1126,7 @@ function cptui_manage_post_types() {
  *
  * @since 1.0.0
  *
- * @param array $post_types Array of post types that are registered.
+ * @param array $post_types Array of post types that are registered. Optional.
  */
 function cptui_post_types_dropdown( $post_types = array() ) {
 
@@ -1160,8 +1160,7 @@ function cptui_post_types_dropdown( $post_types = array() ) {
  *
  * @internal
  *
- * @param bool $post_type_deleted Whether or not a post type was recently deleted.
- *
+ * @param bool $post_type_deleted Whether or not a post type was recently deleted. Optional. Default false.
  * @return bool|string $value False on no result, sanitized post type if set.
  */
 function cptui_get_current_post_type( $post_type_deleted = false ) {
@@ -1204,8 +1203,7 @@ function cptui_get_current_post_type( $post_type_deleted = false ) {
  *
  * @internal
  *
- * @param array $data $_POST values.
- *
+ * @param array $data $_POST values. Optional.
  * @return bool|string False on failure, string on success.
  */
 function cptui_delete_post_type( $data = array() ) {
@@ -1277,8 +1275,7 @@ function cptui_delete_post_type( $data = array() ) {
  *
  * @internal
  *
- * @param array $data Array of post type data to update.
- *
+ * @param array $data Array of post type data to update. Optional.
  * @return bool|string False on failure, string on success.
  */
 function cptui_update_post_type( $data = array() ) {
@@ -1299,7 +1296,7 @@ function cptui_update_post_type( $data = array() ) {
 
 	if ( ! empty( $data['cpt_original'] ) && $data['cpt_original'] != $data['cpt_custom_post_type']['name'] ) {
 		if ( ! empty( $data['update_post_types'] ) ) {
-			cptui_convert_post_type_posts( $data['cpt_original'], $data['cpt_custom_post_type']['name'] );
+			add_filter( 'cptui_convert_post_type_posts', '__return_true' );
 		}
 	}
 
@@ -1510,8 +1507,8 @@ function cptui_reserved_post_types() {
  *
  * @internal
  *
- * @param string $original_slug Original post type slug.
- * @param string $new_slug      New post type slug.
+ * @param string $original_slug Original post type slug. Optional. Default empty string.
+ * @param string $new_slug      New post type slug. Optional. Default empty string.
  */
 function cptui_convert_post_type_posts( $original_slug = '', $new_slug = '' ) {
 	$args = array(
@@ -1535,10 +1532,9 @@ function cptui_convert_post_type_posts( $original_slug = '', $new_slug = '' ) {
  *
  * @since 1.3.0
  *
- * @param bool   $slug_exists    Whether or not the post type slug exists.
- * @param string $post_type_slug The post type slug being saved.
- * @param array  $post_types     Array of CPTUI-registered post types.
- *
+ * @param bool   $slug_exists    Whether or not the post type slug exists. Optional. Default false.
+ * @param string $post_type_slug The post type slug being saved. Optional. Default empty string.
+ * @param array  $post_types     Array of CPTUI-registered post types. Optional.
  * @return bool
  */
 function cptui_check_existing_post_type_slugs( $slug_exists = false, $post_type_slug = '', $post_types = array() ) {
@@ -1574,7 +1570,7 @@ add_filter( 'cptui_post_type_slug_exists', 'cptui_check_existing_post_type_slugs
  *
  * @since 1.3.0
  *
- * @param string $post_type_slug The post type slug being saved.
+ * @param string $post_type_slug The post type slug being saved. Optional. Default empty string.
  * @return bool Whether or not the slug exists.
  */
 function cptui_check_page_slugs( $post_type_slug = '' ) {
@@ -1592,7 +1588,7 @@ function cptui_check_page_slugs( $post_type_slug = '' ) {
 }
 
 /**
- * Handle the save and deletion of taxonomy data.
+ * Handle the save and deletion of post type data.
  *
  * @since 1.4.0
  */
@@ -1627,3 +1623,25 @@ function cptui_process_post_type() {
 	}
 }
 add_action( 'init', 'cptui_process_post_type', 8 );
+
+/**
+ * Handle the conversion of post type posts.
+ *
+ * This function came to be because we needed to convert AFTER registration.
+ *
+ * @since 1.4.3
+ */
+function cptui_do_convert_post_type_posts() {
+
+	/**
+	 * Whether or not to convert post type posts.
+	 *
+	 * @since 1.4.3
+	 *
+	 * @param bool $value Whether or not to convert.
+	 */
+	if ( apply_filters( 'cptui_convert_post_type_posts', false ) ) {
+		cptui_convert_post_type_posts( sanitize_text_field( $_POST['cpt_original'] ), sanitize_text_field( $_POST['cpt_custom_post_type']['name'] ) );
+	}
+}
+add_action( 'init', 'cptui_do_convert_post_type_posts' );

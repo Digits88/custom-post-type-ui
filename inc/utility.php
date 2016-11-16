@@ -87,7 +87,7 @@ function disp_boolean( $bool_text ) {
  *
  * @internal
  *
- * @param string $original Original footer content.
+ * @param string $original Original footer content. Optional. Default empty string.
  * @return string $value HTML for footer.
  */
 function cptui_footer( $original = '' ) {
@@ -128,7 +128,7 @@ function cptui_flush_rewrite_rules() {
 	}
 
 	/*
-	 * Wise men say that you should not do flush_rewrite_rules on init or admin_int. Due to the nature of our plugin
+	 * Wise men say that you should not do flush_rewrite_rules on init or admin_init. Due to the nature of our plugin
 	 * and how new post types or taxonomies can suddenly be introduced, we need to...potentially. For this,
 	 * we rely on a short lived transient. Only 5 minutes life span. If it exists, we do a soft flush before
 	 * deleting the transient to prevent subsequent flushes. The only times the transient gets created, is if
@@ -210,7 +210,7 @@ function cptui_admin_url( $path ) {
  *
  * @since 1.3.0
  *
- * @param object|string $ui CPTUI Admin UI instance.
+ * @param object|string $ui CPTUI Admin UI instance. Optional. Default empty string.
  * @return string
  */
 function cptui_get_post_form_action( $ui = '' ) {
@@ -260,8 +260,8 @@ function cptui_get_taxonomy_data() {
  *
  * @since 1.3.0
  *
- * @param string       $slug Post type slug to check.
- * @param array|string $data Post type data being utilized.
+ * @param string       $slug Post type slug to check. Optional. Default empty string.
+ * @param array|string $data Post type data being utilized. Optional.
  * @return mixed|void
  */
 function cptui_get_post_type_exists( $slug = '', $data = array() ) {
@@ -393,7 +393,7 @@ function cptui_get_ads() {
  *
  * @internal
  *
- * @param array $ads Array of ads set so far.
+ * @param array $ads Array of ads set so far. Optional.
  * @return array $ads Array of newly constructed ads.
  */
 function cptui_default_ads( $ads = array() ) {
@@ -426,8 +426,8 @@ add_filter( 'cptui_ads', 'cptui_default_ads' );
  *
  * @since 1.4.0
  *
- * @param string $message Message to use in admin notice.
- * @param bool   $success Whether or not a success.
+ * @param string $message Message to use in admin notice. Optional. Default empty string.
+ * @param bool   $success Whether or not a success. Optional. Default true.
  *
  * @return mixed|void
  */
@@ -659,3 +659,61 @@ function cptui_not_new_install( $wp_upgrader, $extras ) {
 	update_option( 'cptui_new_install', 'false' );
 }
 add_action( 'upgrader_process_complete', 'cptui_not_new_install', 10, 2 );
+
+/**
+ * Returns saved values for single post type from CPTUI settings.
+ *
+ * @since 1.5.0
+ *
+ * @param string $post_type Post type to retrieve CPTUI object for.
+ * @return string
+ */
+function cptui_get_cptui_post_type_object( $post_type = '' ) {
+	$post_types = get_option( 'cptui_post_types' );
+
+	if ( array_key_exists( $post_type, $post_types ) ) {
+		return $post_types[ $post_type ];
+	}
+	return '';
+}
+
+/**
+ * Returns saved values for single taxonomy from CPTUI settings.
+ *
+ * @since 1.5.0
+ *
+ * @param string $taxonomy Taxonomy to retrieve CPTUI object for.
+ * @return string
+ */
+function cptui_get_cptui_taxonomy_object( $taxonomy = '' ) {
+	$taxonomies = get_option( 'cptui_taxonomies' );
+
+	if ( array_key_exists( $taxonomy, $taxonomies ) ) {
+		return $taxonomies[ $taxonomy ];
+	}
+	return '';
+}
+
+/**
+ * Checks if a requested post type has a custom CPTUI feature supported.
+ *
+ * @since 1.5.0
+ *
+ * @param string $post_type Post type slug.
+ * @param string $feature   Feature to check for.
+ * @return bool
+ */
+function cptui_post_type_supports( $post_type, $feature ) {
+
+	$object = cptui_get_cptui_post_type_object( $post_type );
+
+	if ( ! empty( $object ) ) {
+		if ( array_key_exists( $feature, $object ) && ! empty( $object[ $feature ] ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	return false;
+}

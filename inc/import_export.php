@@ -20,8 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @internal
  *
- * @param array  $tabs         Array of tabs to display.
- * @param string $current_page Current page being shown.
+ * @param array  $tabs         Array of tabs to display. Optional.
+ * @param string $current_page Current page being shown. Optional. Default empty string.
  * @return array Amended array of tabs to show.
  */
 function cptui_importexport_tabs( $tabs = array(), $current_page = '' ) {
@@ -29,7 +29,7 @@ function cptui_importexport_tabs( $tabs = array(), $current_page = '' ) {
 	if ( 'importexport' == $current_page ) {
 		$classes = array( 'nav-tab' );
 
-		$tabs['page_title'] = __( 'Import/Export', 'custom-post-type-ui' );
+		$tabs['page_title'] = get_admin_page_title();
 		$tabs['tabs']       = array();
 		$tabs['tabs']['post_types'] = array(
 			'text'          => __( 'Post Types', 'custom-post-type-ui' ),
@@ -144,8 +144,8 @@ function cptui_importexport() {
  * @since 1.2.0 Added $cptui_taxonomies parameter.
  * @since 1.2.0 Added $single parameter.
  *
- * @param array $cptui_taxonomies Array of taxonomies to render.
- * @param bool  $single           Whether or not we are rendering a single taxonomy.
+ * @param array $cptui_taxonomies Array of taxonomies to render. Optional.
+ * @param bool  $single           Whether or not we are rendering a single taxonomy. Optional. Default false.
  */
 function cptui_get_taxonomy_code( $cptui_taxonomies = array(), $single = false ) {
 	if ( ! empty( $cptui_taxonomies ) ) {
@@ -174,7 +174,7 @@ function <?php echo $callback; ?>() {
  *
  * @since 1.0.0
  *
- * @param array $taxonomy Taxonomy data to output.
+ * @param array $taxonomy Taxonomy data to output. Optional.
  */
 function cptui_get_single_taxonomy_registery( $taxonomy = array() ) {
 
@@ -215,6 +215,16 @@ function cptui_get_single_taxonomy_registery( $taxonomy = array() ) {
 	$public = ( isset( $taxonomy['public'] ) ) ? disp_boolean( $taxonomy['public'] ) : 'true';
 	$show_in_quick_edit = ( isset( $taxonomy['show_in_quick_edit'] ) ) ? disp_boolean( $taxonomy['show_in_quick_edit'] ) : disp_boolean( $taxonomy['show_ui'] );
 
+	$show_in_menu = ( ! empty( $taxonomy['show_in_menu'] ) && false !== get_disp_boolean( $taxonomy['show_in_menu'] ) ) ? 'true' : 'false';
+	if ( empty( $taxonomy['show_in_menu'] ) ) {
+		$show_in_menu = disp_boolean( $taxonomy['show_ui'] );
+	}
+
+	$show_in_nav_menus = ( ! empty( $taxonomy['show_in_nav_menus'] ) && false !== get_disp_boolean( $taxonomy['show_in_nav_menus'] ) ) ? 'true' : 'false';
+	if ( empty( $taxonomy['show_in_nav_menus'] ) ) {
+		$show_in_nav_menus = $public;
+	}
+
 	$my_theme = wp_get_theme();
 	$textdomain = $my_theme->get( 'TextDomain' );
 	?>
@@ -235,8 +245,8 @@ function cptui_get_single_taxonomy_registery( $taxonomy = array() ) {
 		"hierarchical" => <?php echo $taxonomy['hierarchical']; ?>,
 		"label" => "<?php echo $taxonomy['label']; ?>",
 		"show_ui" => <?php echo disp_boolean( $taxonomy['show_ui'] ); ?>,
-		"show_in_menu" => <?php echo disp_boolean( $taxonomy['show_in_menu'] ); ?>,
-		"show_in_nav_menus" => <?php echo disp_boolean( $taxonomy['show_in_nav_menus'] ); ?>,
+		"show_in_menu" => <?php echo $show_in_menu; ?>,
+		"show_in_nav_menus" => <?php echo $show_in_nav_menus; ?>,
 		"query_var" => <?php echo disp_boolean( $taxonomy['query_var'] );?>,
 		"rewrite" => <?php echo $rewrite; ?>,
 		"show_admin_column" => <?php echo $taxonomy['show_admin_column']; ?>,
@@ -255,8 +265,8 @@ function cptui_get_single_taxonomy_registery( $taxonomy = array() ) {
  * @since 1.2.0 Added $cptui_post_types parameter.
  * @since 1.2.0 Added $single parameter.
  *
- * @param array $cptui_post_types Array of post types to render.
- * @param bool  $single           Whether or not we are rendering a single post type.
+ * @param array $cptui_post_types Array of post types to render. Optional.
+ * @param bool  $single           Whether or not we are rendering a single post type. Optional. Default false.
  */
 function cptui_get_post_type_code( $cptui_post_types = array(), $single = false ) {
 	// Whitespace very much matters here, thus why it's all flush against the left side.
@@ -286,7 +296,7 @@ function <?php echo $callback; ?>() {
  *
  * @since 1.0.0
  *
- * @param array $post_type Post type data to output.
+ * @param array $post_type Post type data to output. Optional.
  */
 function cptui_get_single_post_type_registery( $post_type = array() ) {
 
@@ -419,7 +429,7 @@ function cptui_get_single_post_type_registery( $post_type = array() ) {
  *
  * @internal
  *
- * @param array $postdata $_POST data as json.
+ * @param array $postdata $_POST data as json. Optional.
  * @return mixed false on nothing to do, otherwise void.
  */
 function cptui_import_types_taxes_settings( $postdata = array() ) {
