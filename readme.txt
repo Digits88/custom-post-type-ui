@@ -30,6 +30,9 @@ Official development of Custom Post Type UI is on GitHub, with official stable r
 
 == Changelog ==
 
+= 1.5.2 - TBD =
+* Fixed: Chrome conflicts around the js used to sanitize post type and taxonomy slugs and cursors moving to end of input.
+
 = 1.5.1 - 2017-1-17 =
 * Fixed: Undefined index notice during update process for themes or plugins.
 * Fixed: Blacklisted the word "include" from allowed taxonomy slugs. Causes menus to not show in WP Admin.
@@ -87,6 +90,9 @@ Official development of Custom Post Type UI is on GitHub, with official stable r
 * Updated: Further UI refinements to better match WordPress admin. Adapted styles found from metaboxes, including collapse/expand toggles.
 
 == Upgrade Notice ==
+
+= 1.5.2 - TBD =
+* Fixed: Chrome conflicts around the js used to sanitize post type and taxonomy slugs and cursors moving to end of input.
 
 = 1.5.1 - 2017-1-17 =
 * Fixed: Undefined index notice during update process for themes or plugins.
