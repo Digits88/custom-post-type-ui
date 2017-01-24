@@ -32,6 +32,7 @@ Official development of Custom Post Type UI is on GitHub, with official stable r
 
 = 1.5.2 - TBD =
 * Fixed: Chrome conflicts around the js used to sanitize post type and taxonomy slugs and cursors moving to end of input.
+* Fixed: Further hardened undefined index notices and instance checks in our cptui_not_new_install() callback.
 
 = 1.5.1 - 2017-1-17 =
 * Fixed: Undefined index notice during update process for themes or plugins.
@@ -93,6 +94,7 @@ Official development of Custom Post Type UI is on GitHub, with official stable r
 
 = 1.5.2 - TBD =
 * Fixed: Chrome conflicts around the js used to sanitize post type and taxonomy slugs and cursors moving to end of input.
+* Fixed: Further hardened undefined index notices and instance checks in our cptui_not_new_install() callback.
 
 = 1.5.1 - 2017-1-17 =
 * Fixed: Undefined index notice during update process for themes or plugins.
