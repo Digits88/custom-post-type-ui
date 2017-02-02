@@ -30,9 +30,11 @@ Official development of Custom Post Type UI is on GitHub, with official stable r
 
 == Changelog ==
 
-= 1.5.2 - TBD =
+= 1.5.2 - 2017-2-1 =
 * Fixed: Chrome conflicts around the js used to sanitize post type and taxonomy slugs and cursors moving to end of input.
 * Fixed: Further hardened undefined index notices and instance checks in our cptui_not_new_install() callback.
+* Updated: Help text for post type and taxonomy slugs around the use of dashes. See http://docs.pluginize.com/article/135-dashes-in-post-type-taxonomy-slugs-for-url-seo
+* Added: Clarification text regarding what the "Get code" section is useful for.
 
 = 1.5.1 - 2017-1-17 =
 * Fixed: Undefined index notice during update process for themes or plugins.
@@ -92,9 +94,11 @@ Official development of Custom Post Type UI is on GitHub, with official stable r
 
 == Upgrade Notice ==
 
-= 1.5.2 - TBD =
+= 1.5.2 - 2017-2-1 =
 * Fixed: Chrome conflicts around the js used to sanitize post type and taxonomy slugs and cursors moving to end of input.
 * Fixed: Further hardened undefined index notices and instance checks in our cptui_not_new_install() callback.
+* Updated: Help text for post type and taxonomy slugs around the use of dashes. See http://docs.pluginize.com/article/135-dashes-in-post-type-taxonomy-slugs-for-url-seo
+* Added: Clarification text regarding what the "Get code" section is useful for.
 
 = 1.5.1 - 2017-1-17 =
 * Fixed: Undefined index notice during update process for themes or plugins.
