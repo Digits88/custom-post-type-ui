@@ -32,7 +32,7 @@ Official development of Custom Post Type UI is on GitHub, with official stable r
 
 See changelog.txt for older changes.
 
-= 1.5.3 - TBD =
+= 1.5.3 - 2017-03-29 =
 * Fixed: Removed ability to rename post type and taxonomy slugs to reserved slugs after initial saving.
 * Updated: Updated existing and added new, fancier side graphics.
 
@@ -100,7 +100,7 @@ See changelog.txt for older changes.
 
 == Upgrade Notice ==
 
-= 1.5.3 - TBD =
+= 1.5.3 - 2017-03-29 =
 * Fixed: Removed ability to rename post type and taxonomy slugs to reserved slugs after initial saving.
 * Updated: Updated existing and added new, fancier side graphics.
 
